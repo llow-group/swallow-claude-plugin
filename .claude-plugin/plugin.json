@@ -1,23 +1,14 @@
 {
   "name": "swallow-pricing-engine",
   "version": "1.0.0",
-  "description": "Build, validate, and test insurance pricing models with the Swallow Pricing Engine via MCP",
+  "description": "Build, validate, analyse, and test insurance pricing models with the Swallow Pricing Engine via MCP",
   "author": {
     "name": "Llow Group",
     "email": "dev@llow.io",
     "url": "https://swallow.app"
   },
   "homepage": "https://swallow.app",
-  "repository": "https://github.com/llow-group/mono",
-  "license": "UNLICENSED",
-  "keywords": ["insurance", "pricing", "actuarial", "mcp", "swallow"],
-  "mcpServers": "../.mcp.json",
-  "skills": "../skills/",
-  "agents": "../agents/",
-  "userConfig": {
-    "api_endpoint": {
-      "description": "Swallow API endpoint (default: https://api.llow.io)",
-      "sensitive": false
-    }
-  }
+  "repository": "https://github.com/llow-group/swallow-claude-plugin",
+  "license": "MIT",
+  "keywords": ["insurance", "pricing", "actuarial", "mcp", "swallow"]
 }

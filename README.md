@@ -5,9 +5,9 @@ A Claude Code plugin that connects to the [Swallow](https://swallow.app) insuran
 ## What you get
 
 - **MCP Server** — 3 tools: test project, validate project, fetch schema
-- **Skills** — `/build-pricing-model`, `/validate-project`, `/test-project`
+- **Commands** — `/swallow-pricing-engine:docs` for full engine reference
+- **Skills** — `/swallow-pricing-engine:build-pricing-model`, `/swallow-pricing-engine:validate-project`, `/swallow-pricing-engine:test-project`
 - **Agents** — `swallow-actuary` (builds models) and `swallow-analyst` (reviews and stress-tests them)
-- **Context** — Full engine documentation and LLM generation guidelines loaded as rules
 
 ## Installation
 
@@ -49,7 +49,7 @@ postcode, NCD, and conviction count as rating factors
 Or via skill:
 
 ```
-/build-pricing-model
+/swallow-pricing-engine:build-pricing-model
 
 I need a pet insurance pricing model. Factors: animal species (dog/cat),
 breed, age, neutered status, and owner postcode. Exclude dogs over 12 and
@@ -70,10 +70,18 @@ The analyst will:
 4. Assess competitiveness for your target market
 5. Recommend retail and technical pricing improvements
 
+### Reference the engine docs
+
+```
+/swallow-pricing-engine:docs
+```
+
+Loads the full Swallow Pricing Engine documentation into context — step types, expression syntax, schema validation, templates, and more.
+
 ### Validate an existing project
 
 ```
-/validate-project
+/swallow-pricing-engine:validate-project
 
 Check the project in ./my-project.json
 ```
@@ -81,7 +89,7 @@ Check the project in ./my-project.json
 ### Run tests
 
 ```
-/test-project
+/swallow-pricing-engine:test-project
 
 Run the tests in ./my-project.json and tell me what's failing
 ```
@@ -108,30 +116,25 @@ The actuary builds the model. The analyst tells you if the model makes commercia
 ```
 swallow-claude-plugin/
 ├── .claude-plugin/
-│   ├── plugin.json                # Plugin manifest
-│   └── marketplace.json           # Marketplace listing
-├── .mcp.json                      # MCP server connection
-├── .claude/rules/
-│   ├── swallow-readme.md          # Full engine documentation
-│   └── swallow-llm-guidelines.md  # LLM generation rules
+│   ├── plugin.json            # Plugin manifest
+│   └── marketplace.json       # Marketplace listing
+├── .mcp.json                  # MCP server connection
+├── commands/
+│   └── docs.md                # Full engine documentation
 ├── skills/
-│   ├── build-pricing-model/       # Build from description
-│   ├── validate-project/          # Schema validation
-│   └── test-project/              # Run and analyse tests
+│   ├── build-pricing-model/   # Build from description
+│   ├── validate-project/      # Schema validation
+│   └── test-project/          # Run and analyse tests
 ├── agents/
-│   ├── swallow-actuary.md         # Technical pricing builder
-│   └── swallow-analyst.md         # Commercial pricing analyst
+│   ├── swallow-actuary.md     # Technical pricing builder
+│   └── swallow-analyst.md     # Commercial pricing analyst
 └── README.md
 ```
 
-## Adding your own documentation
-
-Drop additional `.md` files into `.claude/rules/` to give Claude more context about your specific insurance products, rating tables, or conventions. These are loaded automatically.
-
 ## API Endpoint
 
-The plugin connects to `https://api.llow.io/ai/mcp`. For self-hosted deployments, configure the endpoint in plugin settings.
+The plugin connects to `https://api.llow.io/ai/mcp`. For self-hosted deployments, update the URL in `.mcp.json`.
 
 ## License
 
-Proprietary — Llow Group
+MIT — Llow Group
