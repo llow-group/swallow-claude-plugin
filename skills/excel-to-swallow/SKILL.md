@@ -18,7 +18,7 @@ The user will provide:
 - **Excel file path** — a `.xls` or `.xlsx` file containing pricing/rating logic
 - **Result cell** (optional) — the cell reference containing the final price (e.g. `"Sheet1!C45"` or `"premium!H12"`)
 
-If no result cell is supplied, look for a cell with `:::result` in its comment/note. If neither exists, ask the user which cell contains the final premium/price.
+If no result cell is supplied, **auto-detect it** (see Step 2). Only ask the user as a last resort.
 
 ## Process
 
@@ -34,13 +34,25 @@ Read the Excel file. For each sheet, map out:
 ### Step 2 — Identify the result cell
 
 Find the result cell using this priority:
+
 1. **Supplied parameter** — if the user provided a cell reference, use it
 2. **`:::result` flag** — scan all cell comments for `:::result`
-3. **Ask the user** — if neither found, list candidate cells (those with formulas that nothing else references) and ask which is the final price
+3. **Auto-detect** — this is the primary method. Find the result cell by:
+   a. Build a reference map: for every cell with a formula, record which other cells it references
+   b. Invert the map to find which cells are referenced BY other cells
+   c. **Terminal formula cells** are cells that have a formula but are NOT referenced by any other formula cell — they are the "end of the chain"
+   d. Among terminal cells, rank candidates by:
+      - Deepest dependency chain (most steps to reach from inputs) — the final price typically depends on many intermediate calculations
+      - Numeric type (the result is almost always a number, not text or boolean)
+      - Sheet name heuristics: cells on sheets named "summary", "output", "premium", "result", "quote" rank higher
+      - Cell label/header heuristics: cells near labels containing "total", "premium", "price", "result", "final", "gross", "net" rank higher
+   e. If there is a single clear winner, use it. If there are 2-3 plausible candidates, present them to the user with their current values and formula descriptions and ask which is the result
+4. **Ask the user** — only as last resort if auto-detect produces too many candidates or none
 
 Also look for:
 - `:::valid` in comments — the validity/exclusion check cell
 - `:::input` in comments — explicitly marked input cells
+- Auto-detect validity: terminal boolean formula cells that reference exclusion-like logic
 
 ### Step 3 — Trace the dependency tree backwards from result
 
