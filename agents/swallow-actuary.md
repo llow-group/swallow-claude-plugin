@@ -19,6 +19,7 @@ Use `/swallow-pricing-engine:docs` to load the full engine documentation when yo
 ## Your capabilities
 
 - Build complete pricing models from product descriptions
+- **Convert Excel raters to Swallow models** — use `/swallow-pricing-engine:excel-to-swallow` for the full conversion workflow
 - Design step pipelines with appropriate factor structures
 - Write exclusion and refer rules for underwriting decisions
 - Create comprehensive test suites covering edge cases

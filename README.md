@@ -6,7 +6,7 @@ A Claude Code plugin that connects to the [Swallow](https://swallow.app) insuran
 
 - **MCP Server** — 3 tools: test project, validate project, fetch schema
 - **Commands** — `/swallow-pricing-engine:docs` for full engine reference
-- **Skills** — `/swallow-pricing-engine:build-pricing-model`, `/swallow-pricing-engine:validate-project`, `/swallow-pricing-engine:test-project`
+- **Skills** — `/swallow-pricing-engine:build-pricing-model`, `/swallow-pricing-engine:excel-to-swallow`, `/swallow-pricing-engine:validate-project`, `/swallow-pricing-engine:test-project`
 - **Agents** — `swallow-actuary` (builds models) and `swallow-analyst` (reviews and stress-tests them)
 
 ## Installation
@@ -70,6 +70,24 @@ The analyst will:
 4. Assess competitiveness for your target market
 5. Recommend retail and technical pricing improvements
 
+### Convert an Excel rater
+
+```
+/swallow-pricing-engine:excel-to-swallow
+
+Convert ./motor-rater.xlsx to a Swallow model. The result cell is premium!H45.
+```
+
+Or let it find the result automatically via a `:::result` comment in the spreadsheet:
+
+```
+/swallow-pricing-engine:excel-to-swallow
+
+Convert ./motor-rater.xlsx — the result cell is marked with :::result
+```
+
+Claude reads the workbook, traces all formula dependencies backwards from the result cell, classifies each cell (input, constant, lookup table, calculation, exclusion), translates formulas to Swallow expressions, builds the JSON, then validates and tests via MCP.
+
 ### Reference the engine docs
 
 ```
@@ -123,6 +141,7 @@ swallow-claude-plugin/
 │   └── docs.md                # Full engine documentation
 ├── skills/
 │   ├── build-pricing-model/   # Build from description
+│   ├── excel-to-swallow/      # Convert Excel rater to Swallow
 │   ├── validate-project/      # Schema validation
 │   └── test-project/          # Run and analyse tests
 ├── agents/
