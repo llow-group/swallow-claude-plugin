@@ -1,0 +1,15 @@
+{
+  "owner": {
+    "name": "Llow Group",
+    "email": "dev@llow.io",
+    "url": "https://swallow.app"
+  },
+  "plugins": [
+    {
+      "name": "swallow-pricing-engine",
+      "version": "1.0.0",
+      "description": "Build, validate, analyse, and test insurance pricing models with the Swallow Pricing Engine via MCP. Includes actuary and analyst agents, pricing skills, and full engine documentation.",
+      "source": "./"
+    }
+  ]
+}

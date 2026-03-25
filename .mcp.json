@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "swallow": {
+      "type": "http",
+      "url": "https://api.llow.io/ai/mcp"
+    }
+  }
+}
