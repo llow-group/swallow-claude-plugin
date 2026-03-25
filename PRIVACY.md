@@ -41,7 +41,7 @@ When you use the MCP tools provided by this plugin, the following data is sent t
 
 - You control what data is sent — the plugin only transmits data you explicitly pass to MCP tools.
 - You can stop all data transmission by disabling or uninstalling the plugin.
-- To request deletion of access logs, contact dev@llow.io.
+- To request deletion of access logs, contact contact@llow.io.
 
 ## Changes to this policy
 
@@ -49,4 +49,4 @@ Updates will be published to this file in the plugin repository. The effective d
 
 ## Contact
 
-For privacy questions: dev@llow.io
+For privacy questions: contact@llow.io
