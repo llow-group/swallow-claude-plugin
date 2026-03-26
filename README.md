@@ -58,9 +58,34 @@ claude --plugin-dir ./swallow-claude-plugin
 
 This is useful for development, testing, or customising the plugin before sharing.
 
-### MCP server only (claude.ai / any MCP client)
+### MCP server only
 
-If you only want the MCP tools and prompts without the full plugin (e.g. in claude.ai web chat), add the MCP server as an integration pointing to:
+If you only want the MCP tools and prompts without the full plugin, you can add the MCP server directly.
+
+#### Claude Code (via settings.json)
+
+Add the following to your Claude Code settings file. Choose the scope that suits you:
+
+- **User** (`~/.claude/settings.json`) — available across all projects
+- **Project** (`.claude/settings.json` in your repo) — shared with collaborators
+- **Local** (`.claude/settings.local.json` in your repo) — just for you in this repo
+
+```json
+{
+  "mcpServers": {
+    "swallow": {
+      "type": "http",
+      "url": "https://api.llow.io/ai/mcp"
+    }
+  }
+}
+```
+
+After saving, restart Claude Code or run `/mcp` to verify the server is connected. You should see the 4 Swallow tools available.
+
+#### claude.ai / other MCP clients
+
+Add the MCP server as an integration pointing to:
 
 ```
 https://api.llow.io/ai/mcp
