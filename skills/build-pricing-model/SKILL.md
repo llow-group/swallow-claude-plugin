@@ -24,9 +24,11 @@ The user wants to create a Swallow pricing engine configuration. Follow this pro
    - Calculation steps for premium, commission, tax
    - Excess and endorsement steps if needed
 
-4. **Define the output** — Set the `result` formula, `valid` expression, and any additional output fields.
+   **Important:** Never use a step type name or its plural as a step key — e.g. never `key: "exclusion"`, `"exclusions"`, `"refer"`, `"refers"`. These collide with Swallow's built-in aggregate variables. Use descriptive prefixed names instead (e.g. `"uw_exclusions"`, `"risk_refers"`).
 
-5. **Add tests** — Create at least 3 test cases: happy path, exclusion trigger, and edge case.
+4. **Define the output** — Set the `result` formula, `valid` expression, and any additional output fields. Use `!{{exclusions}}` in the `valid` expression to check the built-in exclusions aggregate.
+
+5. **Add tests** — Create at least 3 test cases: happy path, exclusion trigger, and edge case. Every test must include an `output` object with `result` (number) and `valid` (boolean) — never leave `output` as `{}`. For excluded cases, set `valid: false` and `result: 0`.
 
 6. **Validate** — Call `validate_swallow_project` via MCP to check the schema.
 

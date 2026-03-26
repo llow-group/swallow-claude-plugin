@@ -75,7 +75,23 @@ Named customer archetypes with realistic input combinations:
 - Market segment representatives for the target audience
 
 **Building the tests programmatically:**
-Construct the test cases as a project `tests` array. Each test needs a unique `id`, descriptive `name`, `key`, and the `input` object. Set `output` to `{}` — you're discovering what the model produces, not asserting expected values.
+Construct the test cases as a project `tests` array. Each test needs:
+- `id` — unique identifier
+- `name` — descriptive name
+- `key` — test key (same as id)
+- `input` — the quote input values
+- `output` — must include `result` (number) and `valid` (boolean). Since you are discovering what the model produces, set `result` to `0` and `valid` to `true` as placeholders. The engine will return actual values alongside these expected values so you can capture the real pricing surface.
+
+Example test structure:
+```json
+{
+  "id": "sweep_age_17",
+  "name": "Age sweep - 17",
+  "key": "sweep_age_17",
+  "input": { "age": 17, "vehicle_value": 15000 },
+  "output": { "result": 0, "valid": true }
+}
+```
 
 Run all cases via `test_swallow_project` MCP tool. For 2,500 cases, batch into multiple calls if needed (the engine handles arrays efficiently).
 
