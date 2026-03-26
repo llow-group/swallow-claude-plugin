@@ -4,14 +4,26 @@ A Claude Code plugin that connects to the [Swallow](https://swallow.app) insuran
 
 ## What you get
 
-- **MCP Server** — 3 tools: test project, validate project, fetch schema
-- **Commands** — `/swallow-pricing-engine:docs` for full engine reference
-- **Skills** — `/swallow-pricing-engine:build-pricing-model`, `/swallow-pricing-engine:excel-to-swallow`, `/swallow-pricing-engine:validate-project`, `/swallow-pricing-engine:test-project`
+- **MCP Server** — 4 tools: test project, validate project, fetch schema, fetch documentation
+- **MCP Prompts** — 4 workflow prompts for building, testing, analysing, and converting pricing models (available in claude.ai via MCP integration)
+- **MCP Resource** — `swallow://guide` comprehensive reference guide
+- **Skills** — `/swallow-pricing-engine:build-pricing-model`, `/swallow-pricing-engine:excel-to-swallow`, `/swallow-pricing-engine:validate-project`, `/swallow-pricing-engine:test-project`, `/swallow-pricing-engine:swallow-docs`
 - **Agents** — `swallow-actuary` (builds models) and `swallow-analyst` (reviews and stress-tests them)
+- **Documentation** — Engine reference, JSON schema, and agent rules in `docs/`
 
 ## Installation
 
-Add the marketplace to your Claude Code settings (`~/.claude/settings.json`):
+### From the marketplace
+
+Add the marketplace and install the plugin:
+
+```
+/plugin marketplace add llow-group/swallow-claude-plugin
+/plugin install swallow-pricing-engine@swallow-pricing-engine
+/reload-plugins
+```
+
+Or add it manually to your Claude Code settings (`~/.claude/settings.json`):
 
 ```json
 {
@@ -26,16 +38,35 @@ Add the marketplace to your Claude Code settings (`~/.claude/settings.json`):
 
 Then install:
 
-```bash
-claude plugin install swallow-pricing-engine@swallow
+```
+/plugin install swallow-pricing-engine@swallow
 ```
 
-### Test locally
+You can choose your installation scope:
+- **User** — available across all projects
+- **Project** — shared with collaborators (stored in `.claude/settings.json`)
+- **Local** — just for you in this repo
+
+### From the git repo (local development)
+
+Clone the repo and load it directly:
 
 ```bash
 git clone https://github.com/llow-group/swallow-claude-plugin.git
 claude --plugin-dir ./swallow-claude-plugin
 ```
+
+This is useful for development, testing, or customising the plugin before sharing.
+
+### MCP server only (claude.ai / any MCP client)
+
+If you only want the MCP tools and prompts without the full plugin (e.g. in claude.ai web chat), add the MCP server as an integration pointing to:
+
+```
+https://api.llow.io/ai/mcp
+```
+
+This gives you the 4 MCP tools, 4 workflow prompts, and the guide resource — but not the local skills or agents.
 
 ## Usage
 
@@ -91,10 +122,10 @@ Claude reads the workbook, traces all formula dependencies backwards from the re
 ### Reference the engine docs
 
 ```
-/swallow-pricing-engine:docs
+/swallow-pricing-engine:swallow-docs
 ```
 
-Loads the full Swallow Pricing Engine documentation into context — step types, expression syntax, schema validation, templates, and more.
+Loads the Swallow Pricing Engine documentation, JSON schema, and agent rules into context — step types, expression syntax, configuration constraints, and more.
 
 ### Validate an existing project
 
@@ -121,13 +152,27 @@ Run the tests in ./my-project.json and tell me what's failing
 
 The actuary builds the model. The analyst tells you if the model makes commercial sense.
 
+Both agents call `docs_swallow_project` to load the latest rules and constraints before working.
+
 ## MCP Tools
 
 | Tool | Description |
 |------|-------------|
-| `test_swallow_project` | Run pricing engine against project tests |
-| `validate_swallow_project` | Validate project JSON against schema |
-| `schema_swallow_project` | Fetch full project JSON schema |
+| `test_swallow_project` | Run embedded tests through the pricing engine and return actual prices |
+| `validate_swallow_project` | Deep schema validation — returns errors with JSON path, keyword, and message |
+| `schema_swallow_project` | Fetch the full JSON schema for project config files |
+| `docs_swallow_project` | Fetch documentation by topic: `"rules"` for agent rules and constraints, `"readme"` for full engine reference |
+
+## MCP Prompts
+
+Available in claude.ai and any MCP client that supports prompts:
+
+| Prompt | Description |
+|--------|-------------|
+| `build-pricing-model` | Guided workflow for building a Swallow config from a product description |
+| `analyse-pricing-model` | Stress-test a model with ~2,500 cases and produce a pricing surface report |
+| `test-pricing-model` | Run and debug embedded tests with a common issues lookup table |
+| `convert-excel-rater` | Convert an Excel workbook to Swallow JSON by tracing formulas |
 
 ## Plugin Structure
 
@@ -137,16 +182,26 @@ swallow-claude-plugin/
 │   ├── plugin.json            # Plugin manifest
 │   └── marketplace.json       # Marketplace listing
 ├── .mcp.json                  # MCP server connection
-├── commands/
-│   └── docs.md                # Full engine documentation
+├── docs/
+│   ├── swallow_readme.md      # Full engine reference
+│   ├── swallow_schema.json    # Project JSON schema
+│   └── swallow_Agent_rules.md # Agent rules and constraints
+├── prompts/
+│   ├── build-pricing-model.md    # MCP prompt: build from description
+│   ├── analyse-pricing-model.md  # MCP prompt: stress-test and analyse
+│   ├── test-pricing-model.md     # MCP prompt: run and debug tests
+│   └── convert-excel-rater.md    # MCP prompt: Excel to Swallow
 ├── skills/
 │   ├── build-pricing-model/   # Build from description
-│   ├── excel-to-swallow/      # Convert Excel rater to Swallow
+│   ├── excel-to-swallow/      # Convert Excel rater
 │   ├── validate-project/      # Schema validation
-│   └── test-project/          # Run and analyse tests
+│   ├── test-project/          # Run and analyse tests
+│   └── swallow-docs/          # Load documentation and schema
 ├── agents/
 │   ├── swallow-actuary.md     # Technical pricing builder
 │   └── swallow-analyst.md     # Commercial pricing analyst
+├── LICENSE
+├── PRIVACY.md
 └── README.md
 ```
 

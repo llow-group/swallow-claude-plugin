@@ -122,10 +122,20 @@ Key rules:
 - Replace all cell references with `{{swallow_property_name}}`
 - Use `snake_case` for all property names (derived from cell labels, sheet names, or column headers)
 - `id` and `key` must be the same within each step
-- Every property needs a `def` (default value) — use the cell's current value
+- Every property needs a `def` (default value) — use the cell's current value. Multiplicative factor defaults must be `1.0` not `0`
 - `result` uses `formula`, `valid` uses `exp`
+- In calculation `formula` fields: use `and`/`or` not `&&`/`||` (MathJS syntax)
+- `min()`/`max()` not supported in transform `exp` — use calculation steps
+- Never use `key` as a data column name in collections
+- Never use: `factors`, `modular`, `batch`, `links`, `label`, `code` steps
 
 ### Step 7 — Build the Swallow JSON
+
+Every input field MUST have `key`, `exp`, `label`, `sub_label` (min 20 chars, broker-facing), `type`, and `def`. Without `key` and `exp`, the engine ignores quote overrides.
+
+Every step MUST have `id`, `step`, `name`, `key`, and `description`.
+
+Collection data MUST be in compressed format: `[[headers], [row1], [row2], ...]`.
 
 Assemble the complete project:
 
@@ -136,7 +146,7 @@ Assemble the complete project:
   "steps": [ ... ],
   "output": {
     "result": { "key": "result", "formula": "...", "type": "decimal", "def": 0 },
-    "valid": { "key": "valid", "exp": "({{exclusions.count()}} === 0)", "type": "boolean", "def": true },
+    "valid": { "key": "output", "exp": "{{exclusions.count()}} == 0", "type": "boolean", "def": true },
     "format": { ... }
   },
   "tests": [ ... ]
