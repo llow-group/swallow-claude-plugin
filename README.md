@@ -1,6 +1,29 @@
 # Swallow Pricing Engine Plugin
 
-A Claude Code plugin that connects to the [Swallow](https://swallow.app) insurance pricing engine via MCP. Build, validate, analyse, and test insurance pricing models directly from Claude.
+A Claude Code plugin that connects to the [Swallow](https://swallow.app) insurance pricing engine via MCP. Build, validate, test, and publish insurance pricing models directly from Claude — then serve live quotes via API.
+
+## Why Swallow
+
+Insurance carriers and MGAs spend weeks translating actuarial Excel models into production-ready systems. Engineering handoffs, manual rate filings, and dev sprints for every rate change slow time-to-market and introduce errors.
+
+Swallow eliminates that cycle. Define your pricing logic as a JSON configuration — rating factors, decision rules, exclusions, endorsements, excesses, referrals — and Swallow runs it as a production API. No custom code, no deployment pipeline, no engineering tickets.
+
+### What you get with this plugin
+
+- **Build pricing models in natural language** — describe your product and rating factors, Claude builds the Swallow config
+- **Convert Excel raters automatically** — point Claude at a workbook, it traces the formulas and generates equivalent Swallow JSON
+- **Validate before you ship** — deep schema validation catches structural problems before they reach production
+- **Test with real prices** — run embedded test cases through the engine and get actual calculated premiums back
+- **Publish to a live API** — deploy your model directly from Claude and get a public quote URL, ready to serve prices
+- **Analyse pricing surfaces** — stress-test models with thousands of scenarios to find cliff edges, competitive gaps, and exposure
+
+### Free account
+
+When you publish a project, Swallow creates a free account automatically using your email address. The free tier includes **100 quotes per month** — enough to test, demo, and validate your pricing model end-to-end. For higher volumes, manage your account at [swa.llow.io](https://swa.llow.io).
+
+---
+
+## How to use this project
 
 There are two ways to use this project — as a **full plugin** (Claude Code only) or as a standalone **MCP server** (Claude Chat, Claude Code, or any MCP client). The plugin includes the MCP server, so you don't need to set up both.
 
@@ -163,11 +186,21 @@ Check the project in ./my-project.json
 Run the tests in ./my-project.json and tell me what's failing
 ```
 
+#### Publish to a live API
+
+Once your model validates and tests pass, publish it directly:
+
+```
+@swallow-actuary Publish ./motor-insurance.json to my-email@company.com
+```
+
+Swallow creates a free account (if the email is new), deploys the project, and returns a public quote URL you can call immediately. Existing account holders are directed to [swa.llow.io](https://swa.llow.io) to manage their projects.
+
 ---
 
 ## MCP Server
 
-The MCP server gives you the 4 tools, 4 workflow prompts, and a guide resource. It works with Claude Chat, Claude Code, or any MCP client — no plugin installation required.
+The MCP server gives you the 5 tools, 4 workflow prompts, and a guide resource. It works with Claude Chat, Claude Code, or any MCP client — no plugin installation required.
 
 ### Setup
 
@@ -200,7 +233,7 @@ If you want the MCP tools without the full plugin, add the server to your Claude
 }
 ```
 
-After saving, restart Claude Code or run `/mcp` to verify the server is connected. You should see the 4 Swallow tools available.
+After saving, restart Claude Code or run `/mcp` to verify the server is connected. You should see the 5 Swallow tools available.
 
 #### Other MCP clients
 
@@ -214,8 +247,9 @@ https://api.llow.io/ai/mcp
 
 | Tool | Description |
 |------|-------------|
-| `test_swallow_project` | Run embedded tests through the pricing engine and return actual prices |
 | `validate_swallow_project` | Deep schema validation — returns errors with JSON path, keyword, and message |
+| `test_swallow_project` | Run embedded tests through the pricing engine and return actual prices |
+| `publish_swallow_project` | Publish a validated project to Swallow. Creates a free account for new emails and returns a project reference and public quote URL |
 | `schema_swallow_project` | Fetch the full JSON schema for project config files |
 | `docs_swallow_project` | Fetch documentation by topic: `"rules"` for agent rules and constraints, `"readme"` for full engine reference |
 
